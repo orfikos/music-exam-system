@@ -4,15 +4,31 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (!timerElement || !examForm) return;
 
-    const endTime = parseInt(timerElement.dataset.endTime, 10);
+    let remaining = Number(timerElement.dataset.remainingSeconds);
+    let hasSubmitted = false;
+
+    if (!Number.isFinite(remaining) || remaining < 0) {
+        remaining = 0;
+    }
+
+    function autoSubmitExam() {
+        if (hasSubmitted) return;
+        hasSubmitted = true;
+
+        timerElement.textContent = "Time is up! Submitting...";
+        
+        const hiddenInput = document.createElement("input");
+        hiddenInput.type = "hidden";
+        hiddenInput.name = "auto_submitted";
+        hiddenInput.value = "1";
+        examForm.appendChild(hiddenInput);
+
+        examForm.submit();
+    }
 
     function updateTimer() {
-        const now = Math.floor(Date.now() / 1000);
-        const remaining = endTime - now;
-
         if (remaining <= 0) {
-            timerElement.textContent = "Time is up!";
-            examForm.submit();
+            autoSubmitExam();
             return;
         }
 
@@ -21,6 +37,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         timerElement.textContent =
             `Time Left: ${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+
+        remaining--;
     }
 
     updateTimer();

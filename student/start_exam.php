@@ -33,13 +33,16 @@ if ($existingAttempt) {
     exit;
 }
 
+$startTime = date('Y-m-d H:i:s');
+
 $insertStmt = $pdo->prepare("
     INSERT INTO attempts (user_id, exam_id, score, start_time)
-    VALUES (:user_id, :exam_id, 0, NOW())
+    VALUES (:user_id, :exam_id, 0, :start_time)
 ");
 $insertStmt->execute([
     'user_id' => $_SESSION['user']['id'],
-    'exam_id' => $examId
+    'exam_id' => $examId,
+    'start_time' => $startTime
 ]);
 
 $attemptId = $pdo->lastInsertId();

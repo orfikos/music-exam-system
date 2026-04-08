@@ -11,6 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 $attemptId = (int)($_POST['attempt_id'] ?? 0);
 $submittedAnswers = $_POST['answers'] ?? [];
+$autoSubmitted = isset($_POST['auto_submitted']) && $_POST['auto_submitted'] === '1';
 
 $stmt = $pdo->prepare("
     SELECT a.*, e.duration_minutes
@@ -96,6 +97,10 @@ try {
     ]);
 
     $pdo->commit();
+
+    if ($autoSubmitted) {
+    setFlash('success', 'Your exam was submitted automatically because the time expired.');
+    }
 
     header("Location: result.php?attempt_id=" . $attemptId);
     exit;

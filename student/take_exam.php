@@ -48,6 +48,7 @@ $optionsStmt = $pdo->prepare("
 $startTimestamp = strtotime($attempt['start_time']);
 $durationSeconds = ((int)$attempt['duration_minutes']) * 60;
 $endTimestamp = $startTimestamp + $durationSeconds;
+$remainingSeconds = max(0, $endTimestamp - time());
 ?>
 
 <?php include __DIR__ . '/../includes/header.php'; ?>
@@ -56,7 +57,8 @@ $endTimestamp = $startTimestamp + $durationSeconds;
 <div class="container page">
     <div class="exam-header">
         <h1><?= htmlspecialchars($attempt['title']) ?></h1>
-        <div id="timer" class="timer-box" data-end-time="<?= $endTimestamp ?>">
+        <p>DEBUG remainingSeconds: <?= $remainingSeconds ?></p>
+        <div id="timer" class="timer-box" data-remaining-seconds="<?= $remainingSeconds ?>">
             Loading timer...
         </div>
     </div>

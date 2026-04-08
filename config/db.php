@@ -1,4 +1,6 @@
 <?php
+date_default_timezone_set('Europe/Athens');
+
 $host = 'localhost';
 $dbname = 'music_exam_system';
 $username = 'root';
